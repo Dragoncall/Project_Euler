@@ -24,9 +24,65 @@ def parse_matrix(matrix):
     return [[int(i) for i in row.split(" ")] for row in matrix.split("\n")]
 
 
+def longest_adjacent_product(array, window_size):
+    max_product = 1
+
+    for i in range(len(array) - window_size):
+        product = 1
+        for char in array[i:i + window_size]:
+            product *= int(char)
+        if product > max_product:
+            max_product = product
+
+    return max_product
+
+# This is a dirty hack and I don't like it :/
+def get_diagonals(matrix):
+    diagonals = []
+    for j in range(len(matrix[0])):
+        diagonal_left = []
+        diagonal_right = []
+        i = 0
+        curr_j = j
+        while 0 <= curr_j < len(matrix[0]) and 0 <= i < len(matrix):
+            diagonal_right.append(matrix[i][curr_j])
+            i += 1
+            curr_j += 1
+        i = 0
+        curr_j = j
+        while 0 <= curr_j < len(matrix[0]) and 0 <= i < len(matrix):
+            diagonal_left.append(matrix[i][curr_j])
+            i += 1
+            curr_j -= 1
+        diagonals.append(diagonal_left)
+        diagonals.append(diagonal_right)
+    for i in range(len(matrix)):
+        diagonal_left = []
+        diagonal_right = []
+        curr_i = i
+        j = 0
+        while 0 <= j < len(matrix[0]) and 0 <= curr_i < len(matrix):
+            diagonal_right.append(matrix[curr_i][j])
+            j += 1
+            curr_i += 1
+        j = len(matrix[0])-1
+        curr_i = i
+        while 0 <= j < len(matrix[0]) and 0 <= curr_i < len(matrix):
+            diagonal_left.append(matrix[curr_i][j])
+            j -= 1
+            curr_i += 1
+        diagonals.append(diagonal_left)
+        diagonals.append(diagonal_right)
+    return diagonals
+
+
 def find_biggest_sum_adjacent(window_size):
     matrix = parse_matrix(input)
-    raise NotImplementedError()
+    rows = [row for row in matrix]
+    columns = [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+    diagonals = get_diagonals(matrix)
+    arrays = rows + columns + diagonals
+    return max([longest_adjacent_product(i, window_size) for i in arrays])
 
 
 if __name__ == '__main__':
