@@ -32,11 +32,9 @@ def sum_of_amicable(threshold):
     for key, value in d_map.items():
         if key in used_keys: continue
         for x in value:
-            if x != key and x in d_map:
+            if x != key and x in d_map and key in d_map[x]:
                 used_keys.append(x)
                 result_sum += key + x
-    # This does not work yet!
-    raise NotImplementedError()
     return result_sum
 
 
